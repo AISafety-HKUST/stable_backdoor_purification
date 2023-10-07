@@ -1,0 +1,6 @@
+attack_label_trans: all2one
+attack_target: 0
+pratio: 0.1
+attack: badnet_bypass
+patch_mask_path: ../resource/badnet/trigger_image.png
+regularization_ratio: 20

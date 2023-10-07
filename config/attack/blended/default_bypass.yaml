@@ -1,0 +1,8 @@
+attack_label_trans: all2one
+attack_target: 0
+pratio: 0.1
+attack: blended_bypass
+attack_trigger_img_path: ../resource/blended/hello_kitty.jpeg
+attack_train_blended_alpha: 0.2
+attack_test_blended_alpha: 0.2
+regularization_ratio: 20
