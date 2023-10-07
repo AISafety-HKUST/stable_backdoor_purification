@@ -1,7 +1,9 @@
-# Towards Stable Backdoor Purification through Feature Shift Tuning (NeurIPS 2023)
+### Towards Stable Backdoor Purification through Feature Shift Tuning (NeurIPS 2023)
 This repository is the official implementation of [Towards Stable Backdoor Purification through Feature Shift Tuning](https://arxiv.org/abs/2310.01875).
 
 Author: Rui Min*, Zeyu Qin*, Li Shen, Minhao Cheng
+
+----
 <div align=center><img src=pics/framework.png  width="80%" height="60%"></div>
 ## Abstract
 
