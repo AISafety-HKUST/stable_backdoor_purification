@@ -401,7 +401,7 @@ def dataset_and_transform_generate(args):
             for i in idx_dict.keys():
                 idx_list += idx_dict[i]
 
-            np.save(f'./data/cifar10/{args.split_ratio}.npy', np.array(idx_list))
+            np.save(f'../data/cifar10/{args.split_ratio}.npy', np.array(idx_list))
             test_dataset_without_transform = CIFAR10(
                 args.dataset_path,
                 train=False,
@@ -430,7 +430,7 @@ def dataset_and_transform_generate(args):
             for i in idx_dict.keys():
                 idx_list += idx_dict[i]
 
-            np.save(f'./data/cifar100/{args.split_ratio}.npy', np.array(idx_list))
+            np.save(f'../data/cifar100/{args.split_ratio}.npy', np.array(idx_list))
             test_dataset_without_transform = CIFAR100(
                 root = args.dataset_path,
                 train = False,
@@ -472,7 +472,7 @@ def dataset_and_transform_generate(args):
                 idx_list += idx_dict[i]
 
 
-            np.save(f'./data/gtsrb/{args.split_ratio}.npy', np.array(idx_list))
+            np.save(f'../data/gtsrb/{args.split_ratio}.npy', np.array(idx_list))
             test_dataset_without_transform =  GTSRB(args.dataset_path,
                                                       train=False,
                                                     )
@@ -500,7 +500,7 @@ def dataset_and_transform_generate(args):
                 idx_list += idx_dict[i]
 
             
-            np.save(f'./data/tiny/{args.split_ratio}.npy', np.array(idx_list))
+            np.save(f'../data/tiny/{args.split_ratio}.npy', np.array(idx_list))
             
             test_dataset_without_transform = TinyImageNet(args.dataset_path,
                                                           split='val',
@@ -581,7 +581,7 @@ def dataset_and_transform_generate_pre(args):
             for i in idx_dict.keys():
                 idx_list += idx_dict[i]
 
-            np.save(f'./data/cifar100/{args.split_ratio}.npy', np.array(idx_list))
+            np.save(f'../data/cifar100/{args.split_ratio}.npy', np.array(idx_list))
             test_dataset_without_transform = CIFAR100(
                 root = args.dataset_path,
                 train = False,
@@ -612,7 +612,7 @@ def dataset_and_transform_generate_pre(args):
                 idx_list += idx_dict[i]
 
             
-            np.save(f'./data/tiny/{args.split_ratio}.npy', np.array(idx_list))
+            np.save(f'../data/tiny/{args.split_ratio}.npy', np.array(idx_list))
             
             test_dataset_without_transform = TinyImageNet(args.dataset_path,
                                                           split='val',
