@@ -121,11 +121,11 @@ def main():
 
     if not args.pre:
         
-        args.folder_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.lr}'
+        args.folder_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.initlr}'
         os.makedirs(f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}', exist_ok=True)
         args.save_path = f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-init_{args.init}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
     else:
-        args.folder_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.lr}'
+        args.folder_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.initlr}'
         os.makedirs(f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}', exist_ok=True)
         args.save_path = f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-init_{args.init}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
         
@@ -264,6 +264,23 @@ def main():
     net.load_state_dict(model_dict['model'])   
     net.to(device)
 
+    for dl_name, test_dataloader in test_dataloader_dict.items():
+        metrics = test(net, test_dataloader, device)
+        metric_info = {
+            f'{dl_name} acc': metrics['test_correct'] / metrics['test_total'],
+            f'{dl_name} loss': metrics['test_loss'],
+        }
+        if 'test_data' == dl_name:
+            cur_clean_acc = metric_info['test_data acc']
+        if 'adv_test_data' == dl_name:
+            cur_adv_acc = metric_info['adv_test_data acc']
+    logging.info('*****************************')
+    logging.info(f"Load from {args.folder_path + '/attack_result.pt'}")
+    logging.info(f'Fine-tunning mode: {args.ft_mode}')
+    logging.info('Original performance')
+    logging.info(f"Test Set: Clean ACC: {cur_clean_acc} | ASR: {cur_adv_acc}")
+    logging.info('*****************************')
+
 
     original_linear_norm = torch.norm(eval(f'net.{args.linear_name}.weight'))
     weight_mat_ori = eval(f'net.{args.linear_name}.weight.data.clone().detach()')
@@ -302,25 +319,6 @@ def main():
     optimizer = optim.SGD(param_list, lr=args.lr,momentum = 0.9)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs)
     criterion = nn.CrossEntropyLoss()
-
-    
-    for dl_name, test_dataloader in test_dataloader_dict.items():
-        metrics = test(net, test_dataloader, device)
-        metric_info = {
-            f'{dl_name} acc': metrics['test_correct'] / metrics['test_total'],
-            f'{dl_name} loss': metrics['test_loss'],
-        }
-        if 'test_data' == dl_name:
-            cur_clean_acc = metric_info['test_data acc']
-        if 'adv_test_data' == dl_name:
-            cur_adv_acc = metric_info['adv_test_data acc']
-    logging.info('*****************************')
-    logging.info(f"Load from {args.folder_path + '/attack_result.pt'}")
-    logging.info(f'Fine-tunning mode: {args.ft_mode}')
-    logging.info('Original performance')
-    logging.info(f"Test Set: Clean ACC: {cur_clean_acc} | ASR: {cur_adv_acc}")
-    logging.info('*****************************')
-
     
     for epoch in range(args.epochs):
         
