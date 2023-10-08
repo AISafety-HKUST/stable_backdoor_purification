@@ -12,4 +12,4 @@ It has been widely observed that deep neural networks (DNN) are vulnerable to ba
 
 
 ----
-#### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"*. This may be the best repo for backdoor research. Please consider leaving a :star: on their repository.
+#### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"*. It may be the best repo for backdoor research. Please consider leaving a :star: on their repository.
