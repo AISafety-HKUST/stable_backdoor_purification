@@ -31,6 +31,12 @@ python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml
 You can customize the training process by modifying the configuration files. There are two important configuration files for training a backdoor model. The configuration files in the [prototype](config/attack/prototype/cifar10.yaml) directory contain some general configurations. For example, you could specify the architecture, learning rate, epoch numbers, etc by changing the corresponding field in the [config file](config/attack/prototype/cifar10.yaml). For specific attacks, the config file lies in individual [folders](config/attack/badnet), where you could specify hyperparameters dedicated to these attacks, such as the poisoning rate and trigger type.
 
 #### Defense backdoor attacks
+Here we list several fine-tuning methods in our paper.
+To conduct FST:
+
+```cmd
+python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1 --device cuda:2 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10 --epochs 10 --initlr 0.1 --ft_mode fst --init --alpha 0.1
+```
 
 
 ----
