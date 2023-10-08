@@ -28,7 +28,7 @@ Before conducting backdoor defense, you have to train a backdoor model with the 
 ```cmd
 python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml
 ```
-You can customize the training process by modifying the config files. For example, you can replace the default model architecture by changing the "model" field in the [config file](config/attack/prototype/cifar10.yaml).
+You can customize the training process by modifying the configuration files. There are two important configuration files for training a backdoor model. The configuration files in the [prototype](config/attack/prototype/cifar10.yaml) directory contain some general configurations. For example, you could specify the architecture, learning rate, epoch numbers, etc by changing the corresponding field in the [config file](config/attack/prototype/cifar10.yaml). For specific attacks, the config file lies in individual folders, where you could specify hyperparameters dedicated to these attacks, such as the poisoning rate and trigger type.
 
 ----
 #### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"*. It may be the best repo for backdoor research. Please consider leaving a :star: on their repository.
