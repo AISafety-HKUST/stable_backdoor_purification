@@ -75,8 +75,6 @@ def add_args(parser):
     
     parser.add_argument('--split_ratio', type=float,
                         help='part of the training set for defense')
-    parser.add_argument('--init', action='store_true',
-                        help='init')
     
     parser.add_argument('--log', action='store_true',
                         help='record the log')
@@ -105,16 +103,21 @@ def main():
     if args.lb_smooth is not None:
         lbs_criterion = LabelSmoothingLoss(classes=args.num_classes, smoothing=args.lb_smooth)
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
-    if args.init == True and args.ft_mode == 'backbone':
+    if args.ft_mode == 'fe-tuning':
+        init = True
         log_name = 'FE-tuning'
-    elif args.init == True and args.ft_mode == 'all':
+    elif args.ft_mode == 'ft-init':
+        init = True
         log_name = 'FT-init'
-    elif args.init == False and args.ft_mode == 'all':
+    elif args.ft_mode == 'ft':
+        init = False
         log_name = 'FT'
-    elif args.init == False and args.ft_mode == 'linear':
+    elif args.ft_mode == 'lp':
+        init = False
         log_name = 'LP'
-    elif args.init == True and args.ft_mode == 'fst':
+    elif args.ft_mode == 'fst':
         assert args.alpha is not None
+        init = True
         log_name = 'FST'
     else:
         raise NotImplementedError('Not implemented method.')
@@ -123,11 +126,11 @@ def main():
         
         args.folder_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.initlr}'
         os.makedirs(f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}', exist_ok=True)
-        args.save_path = f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-init_{args.init}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        args.save_path = f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
     else:
         args.folder_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.initlr}'
         os.makedirs(f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}', exist_ok=True)
-        args.save_path = f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-init_{args.init}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        args.save_path = f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
         
         
     logFormatter = logging.Formatter(
@@ -234,27 +237,27 @@ def main():
 
         if args.model == "resnet18":        
             from torchvision.models import resnet18, ResNet18_Weights        
-            self.net = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1).to(args.device)
-            self.net.fc = nn.Linear(in_features=512, out_features=args.num_classes, bias=True).to(args.device) 
-            for _, param in self.net.named_parameters():
+            net = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1).to(args.device)
+            net.fc = nn.Linear(in_features=512, out_features=args.num_classes, bias=True).to(args.device) 
+            for _, param in net.named_parameters():
                 param.requires_grad = True
         elif args.model == "resnet50":        
             from torchvision.models import resnet50, ResNet50_Weights        
-            self.net = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2).to(args.device)    
-            self.net.fc = nn.Linear(in_features=2048, out_features=args.num_classes, bias=True).to(args.device) 
-            for _, param in self.net.named_parameters():
+            net = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2).to(args.device)    
+            net.fc = nn.Linear(in_features=2048, out_features=args.num_classes, bias=True).to(args.device) 
+            for _, param in net.named_parameters():
                 param.requires_grad = True
         elif args.model == 'swin_b':
             from torchvision.models import swin_b        
-            self.net = swin_b(weights='IMAGENET1K_V1').to(args.device)
-            self.net.head = nn.Linear(in_features=1024, out_features=args.num_classes, bias=True).to(args.device) 
-            for _, param in self.net.named_parameters():
+            net = swin_b(weights='IMAGENET1K_V1').to(args.device)
+            net.head = nn.Linear(in_features=1024, out_features=args.num_classes, bias=True).to(args.device) 
+            for _, param in net.named_parameters():
                 param.requires_grad = True
         elif args.model == 'swin_t':        
             from torchvision.models import swin_t        
-            self.net = swin_t(weights='IMAGENET1K_V1').to(args.device)
-            self.net.head = nn.Linear(in_features=768, out_features=args.num_classes, bias=True).to(args.device) 
-            for _, param in self.net.named_parameters():
+            net = swin_t(weights='IMAGENET1K_V1').to(args.device)
+            net.head = nn.Linear(in_features=768, out_features=args.num_classes, bias=True).to(args.device) 
+            for _, param in net.named_parameters():
                 param.requires_grad = True    
         else:        
             raise NotImplementedError(f"{args.model} is not supported")
@@ -288,7 +291,7 @@ def main():
     param_list = []
     for name, param in net.named_parameters():
         if args.linear_name in name:
-            if args.init:
+            if init:
                 if 'weight' in name:
                     logging.info(f'Initialize linear classifier weight {name}.')
                     std = 1 / math.sqrt(param.size(-1)) 
@@ -297,17 +300,16 @@ def main():
                 else:
                     logging.info(f'Initialize linear classifier weight {name}.')
                     param.data.uniform_(-std, std)
-        if args.ft_mode == 'linear':
+        if args.ft_mode == 'lp':
             if args.linear_name in name:
-                logging.info(name)
                 param.requires_grad = True
                 param_list.append(param)
             else:
                 param.requires_grad = False
-        elif args.ft_mode == 'all' or args.ft_mode == 'fst':
+        elif args.ft_mode == 'ft' or args.ft_mode == 'fst' or args.ft_mode == 'ft-init':
             param.requires_grad = True
             param_list.append(param)
-        elif args.ft_mode == 'backbone':
+        elif args.ft_mode == 'fe-tuning':
             if args.linear_name not in name:
                 param.requires_grad = True
                 param_list.append(param)
@@ -384,7 +386,7 @@ def main():
             logging.info('-------------------------------------')
     
     if args.save:
-        model_save_path = f'defense_results/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-init_{args.init}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        model_save_path = f'defense_results/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
         os.makedirs(model_save_path, exist_ok=True)
         torch.save(net.state_dict(), f'{model_save_path}/checkpoint.pt')
         
