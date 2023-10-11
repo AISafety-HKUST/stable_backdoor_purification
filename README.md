@@ -28,14 +28,14 @@ Before conducting backdoor defense, you have to train a backdoor model with the 
 ```cmd
 python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml
 ```
-You can customize the training process by modifying the configuration files. There are two important configuration files for training a backdoor model. The configuration files in the [prototype](config/attack/prototype/cifar10.yaml) directory contain some general configurations. For example, you could specify the architecture, learning rate, epoch numbers, etc by changing the corresponding field in the [config file](config/attack/prototype/cifar10.yaml). For specific attacks, the config file lies in individual [folders](config/attack/badnet), where you could specify hyperparameters dedicated to these attacks, such as the poisoning rate and trigger type.
+You can customize the training process by modifying the configuration files. There are two important configuration files for training a backdoor model. The configuration files in the [prototype](config/attack/prototype/cifar10.yaml) directory contain some general configurations. For example, you could specify the architecture, learning rate, epoch numbers, etc by changing the corresponding field in the [file](config/attack/prototype/cifar10.yaml). For specific attacks, the configuration file lies in individual [folders](config/attack/badnet), where you could specify hyperparameters dedicated to these attacks, such as the poisoning rate and trigger type.
 
 #### Defense backdoor attacks
 Here we demonstrate how to conduct these fine-tuning methods in our paper. For example, if you want to evaluate the feature shift tuning (FST) on backdoor models, you could use the following script:
 
 ```cmd
 python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1
---device cuda:2 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10
+--device cuda:0 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10
 --epochs 10 --initlr 0.1 --ft_mode fst --alpha 0.1
 ```
 
@@ -44,3 +44,16 @@ You could further specify the tuning method by simply changing the ``` --ft_mode
 
 ----
 #### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"*. It may be the best repo for backdoor research. Please consider leaving a :star: on their repository.
+
+#### Citation
+
+If you find our work interesting, please consider giving a star :star: and cite as:
+```
+@article{min2023towards,
+  title={Towards Stable Backdoor Purification through Feature Shift Tuning},
+  author={Min, Rui and Qin, Zeyu and Shen, Li and Cheng, Minhao},
+  journal={arXiv preprint arXiv:2310.01875},
+  year={2023}
+}
+```
+
