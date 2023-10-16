@@ -78,12 +78,12 @@ def add_args(parser):
     
     parser.add_argument('--log', action='store_true',
                         help='record the log')
-    parser.add_argument('--initlr', type=float,help='learning rate for model training')
-    parser.add_argument('--pre', action='store_true', help='whether load pre-trained weights')
-    parser.add_argument('--save', action='store_true',help='save the model')
-    parser.add_argument('--linear_name', type=str, default='linear',help='name for the linear classifier')
-    parser.add_argument('--lb_smooth', type=float, default=None,help='label smoothing')
-    parser.add_argument('--alpha', type=float,default=0.2)
+    parser.add_argument('--initlr', type=float, help='initial learning rate for training backdoor models')
+    parser.add_argument('--pre', action='store_true', help='load pre-trained weights')
+    parser.add_argument('--save', action='store_true', help='save the model checkpoint')
+    parser.add_argument('--linear_name', type=str, default='linear', help='name for the linear classifier')
+    parser.add_argument('--lb_smooth', type=float, default=None, help='label smoothing')
+    parser.add_argument('--alpha', type=float, default=0.2, help='fst')
     return parser
 
 def main():
