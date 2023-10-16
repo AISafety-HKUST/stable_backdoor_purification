@@ -24,11 +24,8 @@ class CustomDataset(Dataset):
 
 class CustomDataset_v2(Dataset):
     def __init__(self, img_list, attack_target, transform=None):
-        self.image_list = []
-        for i in img_list:
-            x = Image.open(i)
-            self.image_list.append(transform(x))
-        
+        self.img_list = img_list
+        self.transform = transform
         self.attack_target = int(attack_target)
         
         
@@ -36,6 +33,8 @@ class CustomDataset_v2(Dataset):
         return len(self.image_list)
     
     def __getitem__(self, idx):
-        
-        return self.image_list[idx], self.attack_target
+        img = Image.open(self.img_list[idx])
+        if self.transform:
+            img = self.transform(img)
+        return img, self.attack_target
 
