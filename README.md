@@ -30,6 +30,12 @@ python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml
 ```
 You can customize the training process by modifying the configuration files. There are two important configuration files for training a backdoor model. The configuration files in the [prototype](config/attack/prototype/cifar10.yaml) directory contain some general configurations. For example, you could specify the architecture, learning rate, epoch numbers, etc by changing the corresponding field in the [file](config/attack/prototype/cifar10.yaml). For specific attacks, the configuration file lies in individual [folders](config/attack/badnet), where you could specify hyperparameters dedicated to these attacks, such as the poisoning rate and trigger type.
 
+We also implemented the adaptive attack [Bypass](https://arxiv.org/abs/1905.13409) described in our original paper. The [Bypass](https://arxiv.org/abs/1905.13409) attack actively maximizes the indistinguishability of the hidden representations of poisoned data and clean data with adversarial regularization. We follow the methodology described in the Adversarial Embedding section and you could run the following script to attack with the [BadNet trigger](resource/badnet/trigger_image_grid.png) on CIFAR-10:
+```cmd
+python ./attack/badnet_bypass.py --yaml_path ../config/attack/prototype/cifar10.yaml
+```
+You could try the [Blend trigger](resource/blended/hello_kitty.jpeg) by simply replacing the [badnet_bypass.py](attack/badnet_bypass.py) with [blend_bypass.py](attack/blend_bypass.py).
+
 #### Defense backdoor attacks
 Here we demonstrate how to conduct these fine-tuning methods in our paper. For example, if you want to evaluate the feature shift tuning (FST) on backdoor models, you could use the following script:
 
