@@ -174,7 +174,7 @@ class BadNet(NormalCase):
                 image_size=args.img_size[0],
         )
         else:
-            torch.hub.set_dir('/ssddata1/data/rminaa/pretrain_models/')
+            
             import torch.nn as nn
             if args.model == "resnet18":        
                 from torchvision.models import resnet18, ResNet18_Weights        
