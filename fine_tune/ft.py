@@ -236,32 +236,26 @@ def main():
         
         if args.model == "resnet18":        
             from torchvision.models import resnet18, ResNet18_Weights        
-            net = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1).to(args.device)
-            net.fc = nn.Linear(in_features=512, out_features=args.num_classes, bias=True).to(args.device) 
-            for _, param in net.named_parameters():
-                param.requires_grad = True
+            net = resnet18().to(device)
+            net.fc = nn.Linear(in_features=512, out_features=args.num_classes, bias=True).to(device) 
+            
         elif args.model == "resnet50":        
             from torchvision.models import resnet50, ResNet50_Weights        
-            net = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2).to(args.device)    
-            net.fc = nn.Linear(in_features=2048, out_features=args.num_classes, bias=True).to(args.device) 
-            for _, param in net.named_parameters():
-                param.requires_grad = True
+            net = resnet50().to(device)    
+            net.fc = nn.Linear(in_features=2048, out_features=args.num_classes, bias=True).to(device) 
+            
         elif args.model == 'swin_b':
             from torchvision.models import swin_b        
-            net = swin_b(weights='IMAGENET1K_V1').to(args.device)
-            net.head = nn.Linear(in_features=1024, out_features=args.num_classes, bias=True).to(args.device) 
-            for _, param in net.named_parameters():
-                param.requires_grad = True
+            net = swin_b().to(device)
+            net.head = nn.Linear(in_features=1024, out_features=args.num_classes, bias=True).to(device) 
+            
         elif args.model == 'swin_t':        
             from torchvision.models import swin_t        
-            net = swin_t(weights='IMAGENET1K_V1').to(args.device)
-            net.head = nn.Linear(in_features=768, out_features=args.num_classes, bias=True).to(args.device) 
-            for _, param in net.named_parameters():
-                param.requires_grad = True    
+            net = swin_t().to(device)
+            net.head = nn.Linear(in_features=768, out_features=args.num_classes, bias=True).to(device) 
+            
         else:        
             raise NotImplementedError(f"{args.model} is not supported")
-
-    
 
     net.load_state_dict(model_dict['model'])   
     net.to(device)
