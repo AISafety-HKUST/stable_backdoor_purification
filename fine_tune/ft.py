@@ -361,8 +361,6 @@ def main():
         logging.info(f'Learning rate: {optimizer.param_groups[0]["lr"]}')
         logging.info('-------------------------------------')
         
-        cur_clean_acc, cur_adv_acc = 0,0
-
         if epoch == args.epochs-1:
             for dl_name, test_dataloader in test_dataloader_dict.items():
                 metrics = test(net, test_dataloader, device)
