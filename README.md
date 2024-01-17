@@ -55,10 +55,10 @@ You could further specify the tuning method by simply changing the ``` --ft_mode
 
 If you find our work interesting, please consider giving a star :star: and cite as:
 ```
-@article{min2023towards,
+@inproceedings{min2023towards,
   title={Towards Stable Backdoor Purification through Feature Shift Tuning},
   author={Min, Rui and Qin, Zeyu and Shen, Li and Cheng, Minhao},
-  journal={arXiv preprint arXiv:2310.01875},
+  booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
   year={2023}
 }
 ```
