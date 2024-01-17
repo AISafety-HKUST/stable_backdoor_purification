@@ -40,8 +40,8 @@ You could try the [Blend trigger](resource/blended/hello_kitty.jpeg) by simply r
 Here we demonstrate how to conduct these fine-tuning methods in our paper. For example, if you want to evaluate the feature shift tuning (FST) on backdoor models, you could use the following script:
 
 ```cmd
-python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1
---device cuda:0 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10
+python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
+--device cuda:0 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10 \
 --epochs 10 --initlr 0.1 --ft_mode fst --alpha 0.1
 ```
 
