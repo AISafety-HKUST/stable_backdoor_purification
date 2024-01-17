@@ -30,7 +30,7 @@ class CustomDataset_v2(Dataset):
         
         
     def __len__(self):
-        return len(self.image_list)
+        return len(self.img_list)
     
     def __getitem__(self, idx):
         img = Image.open(self.img_list[idx])
