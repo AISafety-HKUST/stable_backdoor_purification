@@ -92,9 +92,9 @@ class NormalCase:
 
     def prepare(self, args):
         if not args.pre:
-            save_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.lr}'
+            save_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}'
         else:
-            save_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.lr}'
+            save_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}'
         
         os.makedirs(save_path,exist_ok=True)
         args.save_path = save_path
