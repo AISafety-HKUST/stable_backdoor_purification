@@ -42,7 +42,7 @@ Here we demonstrate how to conduct these fine-tuning methods in our paper. For e
 ```cmd
 python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
 --device cuda:0 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10 \
---epochs 10 --initlr 0.1 --ft_mode fst --alpha 0.1
+--epochs 10 --ft_mode fst --alpha 0.1
 ```
 
 You could further specify the tuning method by simply changing the ``` --ft_mode``` field. Currently, we support **ft** for vanilla fine-tuning; **lp** for linear-probing; **fe-tuning** for FE-tuning; **ft-init** for FT-init; **fst** for FST. 
