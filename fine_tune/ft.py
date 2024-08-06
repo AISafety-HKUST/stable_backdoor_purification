@@ -8,8 +8,6 @@ import argparse
 from pprint import  pformat
 import numpy as np
 import torch
-import time
-import copy
 import logging
 import torch.nn as nn
 from torch import optim
@@ -78,7 +76,6 @@ def add_args(parser):
     
     parser.add_argument('--log', action='store_true',
                         help='record the log')
-    parser.add_argument('--initlr', type=float, help='initial learning rate for training backdoor models')
     parser.add_argument('--pre', action='store_true', help='load pre-trained weights')
     parser.add_argument('--save', action='store_true', help='save the model checkpoint')
     parser.add_argument('--linear_name', type=str, default='linear', help='name for the linear classifier')
@@ -124,13 +121,13 @@ def main():
 
     if not args.pre:
         
-        args.folder_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.initlr}'
+        args.folder_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}'
         os.makedirs(f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}', exist_ok=True)
-        args.save_path = f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        args.save_path = f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-mode_{args.ft_mode}-epochs_{args.epochs}'
     else:
-        args.folder_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-initlr_{args.initlr}'
+        args.folder_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}'
         os.makedirs(f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}', exist_ok=True)
-        args.save_path = f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        args.save_path = f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-mode_{args.ft_mode}-epochs_{args.epochs}'
         
         
     logFormatter = logging.Formatter(
@@ -377,7 +374,7 @@ def main():
             logging.info('-------------------------------------')
     
     if args.save:
-        model_save_path = f'defense_results/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-initlr_{args.initlr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        model_save_path = f'defense_results/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-mode_{args.ft_mode}-epochs_{args.epochs}'
         os.makedirs(model_save_path, exist_ok=True)
         torch.save(net.state_dict(), f'{model_save_path}/checkpoint.pt')
         
