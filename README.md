@@ -2,7 +2,6 @@
 This repository contains the official implementation of [Towards Stable Backdoor Purification through Feature Shift Tuning](https://arxiv.org/abs/2310.01875) and [Uncovering, Explaining, and Mitigating the Superficial Safety of Backdoor Defense](https://arxiv.org/abs/2410.09838).
 
 ----
-<div align=center><img src=pics/framework.png  width="80%" height="60%"></div>
 
 ### Setup
 
