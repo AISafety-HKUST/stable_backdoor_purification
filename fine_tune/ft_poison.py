@@ -40,7 +40,7 @@ def add_args(parser):
     return a parser added with args required by fit
     """
     # Training settings
-    parser.add_argument('--device', default=0, type=int)
+    parser.add_argument('--device', default='cuda:0', type=str)
     parser.add_argument('--attack', type = str, )
     parser.add_argument('--pratio', type=float,
                         help='the poison rate '
