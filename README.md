@@ -4,10 +4,6 @@ This repository contains the official implementation of [Towards Stable Backdoor
 ----
 <div align=center><img src=pics/framework.png  width="80%" height="60%"></div>
 
-### Abstract
-
-It has been widely observed that deep neural networks (DNN) are vulnerable to backdoor attacks where attackers could manipulate the model behavior maliciously by tampering with a small set of training samples. Although a line of defense methods is proposed to mitigate this threat, they either require complicated modifications to the training process or heavily rely on the specific model architecture, which makes them hard to deploy into real-world applications. Therefore, in this paper, we instead start with fine-tuning, one of the most common and easy-to-deploy backdoor defenses, through comprehensive evaluations against diverse attack scenarios. Observations made through initial experiments show that in contrast to the promising defensive results on high poisoning rates, vanilla tuning methods completely fail at low poisoning rate scenarios. Our analysis shows that with the low poisoning rate, the entanglement between backdoor and clean features undermines the effect of tuning-based defenses. Therefore, it is necessary to disentangle the backdoor and clean features in order to improve backdoor purification. To address this, we introduce Feature Shift Tuning (FST), a method for tuning-based backdoor purification. Specifically, FST encourages feature shifts by actively deviating the classifier weights from the originally compromised weights. Extensive experiments demonstrate that our FST provides consistently stable performance under different attack settings. Additionally, it is also convenient to deploy in real-world scenarios with significantly reduced computation costs.
-
 ### Setup
 
 Clone this repository and install all the required dependencies with the following commands.
@@ -21,7 +17,7 @@ sh ./sh/init_folders.sh
 ```
 
 ### Pipeline
-#### Train backdoor models
+#### Train Backdoor Models
 Before conducting backdoor defense, you have to train a backdoor model with the poisoned training set. Here is an example of training a [BadNet](https://arxiv.org/abs/1708.06733) model on CIFAR-10.
 ```cmd
 python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml
@@ -34,17 +30,29 @@ python ./attack/badnet_bypass.py --yaml_path ../config/attack/prototype/cifar10.
 ```
 You could try the [Blend trigger](resource/blended/hello_kitty.jpeg) by simply replacing the [badnet_bypass.py](attack/badnet_bypass.py) with [blend_bypass.py](attack/blend_bypass.py).
 
-#### Defense backdoor attacks
-Here we demonstrate how to conduct these fine-tuning methods in our paper. For example, if you want to evaluate the feature shift tuning (FST) on backdoor models, you could use the following script:
+#### Launch Feature Shift Tuning (FST)
+Here we demonstrate how to conduct these fine-tuning methods to purify backdoor models. For example, if you want to evaluate the feature shift tuning (FST) on backdoor models, you could use the following script:
 
 ```cmd
 python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
 --device cuda:0 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10 \
---epochs 10 --ft_mode fst --alpha 0.1
+--epochs 10 --ft_mode fst --alpha 0.1 --save
 ```
 
 You could further specify the tuning method by simply changing the ``` --ft_mode``` field. Currently, we support **ft** for vanilla fine-tuning; **lp** for linear-probing; **fe-tuning** for FE-tuning; **ft-init** for FT-init; **fst** for FST. 
 
+#### Launch Retuning Attacks (RA) on Purified Models
+Here we demonstrate how to conduct retuning attacks on purified models. For example, if you want to evaluate the post-robustness of FST on backdoor models, you could use the following script:
+
+```cmd
+python fine_tune/ft_poison.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
+--device cuda:0 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10 \
+--epochs 5 --defense_type fst --poison_num 5 --save
+```
+This is very similar to vanilla fine-tuning; the core difference is that the fine-tuning dataset contains backdoor examples. You could set ```--defense_type``` to specify the defense method, and set ```--poison_num``` to specify the number of backdoor examples in the fine-tuning dataset.
+
+#### Launch Query-based Reactivation Attack (QRA)
+#### Launch Path-Aware Minimization (PAM)
 
 ----
 #### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"*. It may be the best repo for backdoor research. Please consider leaving a :star: on their repository.
@@ -58,6 +66,13 @@ If you find our work interesting, please consider giving a star :star: and cite 
   author={Min, Rui and Qin, Zeyu and Shen, Li and Cheng, Minhao},
   booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
   year={2023}
+}
+
+@article{min2024uncovering,
+  title={Uncovering, Explaining, and Mitigating the Superficial Safety of Backdoor Defense},
+  author={Min, Rui and Qin, Zeyu and Zhang, Nevin L and Shen, Li and Cheng, Minhao},
+  journal={arXiv preprint arXiv:2410.09838},
+  year={2024}
 }
 ```
 
