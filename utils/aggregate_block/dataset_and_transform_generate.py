@@ -60,12 +60,12 @@ def get_input_shape(dataset_name: str) -> Tuple[int, int, int]:
         input_width = 64
         input_channel = 3
     elif dataset_name == 'cifar100':
-        input_height = 32
-        input_width = 32
+        input_height = 224
+        input_width = 224
         input_channel = 3
     elif dataset_name == 'tiny':
-        input_height = 64
-        input_width = 64
+        input_height = 224
+        input_width = 224
         input_channel = 3
     elif dataset_name == 'imagenet':
         input_height = 224
@@ -83,11 +83,13 @@ def get_dataset_normalization(dataset_name):
         dataset_normalization = (transforms.Normalize([0.4914, 0.4822, 0.4465], [0.247, 0.243, 0.261]))
     elif dataset_name == 'cifar100':
         '''get from https://gist.github.com/weiaicunzai/e623931921efefd4c331622c344d8151'''
-        dataset_normalization = (transforms.Normalize([0.5071, 0.4865, 0.4409], [0.2673, 0.2564, 0.2762]))
+        # dataset_normalization = (transforms.Normalize([0.5071, 0.4865, 0.4409], [0.2673, 0.2564, 0.2762]))
+        dataset_normalization = (transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]))
     elif dataset_name == "mnist":
         dataset_normalization = (transforms.Normalize([0.5], [0.5]))
     elif dataset_name == 'tiny':
-        dataset_normalization = (transforms.Normalize([0.4802, 0.4481, 0.3975], [0.2302, 0.2265, 0.2262]))
+        # dataset_normalization = (transforms.Normalize([0.4802, 0.4481, 0.3975], [0.2302, 0.2265, 0.2262]))
+        dataset_normalization = (transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]))
     elif dataset_name == "gtsrb" or dataset_name == "celeba":
         dataset_normalization = transforms.Normalize([0, 0, 0], [1, 1, 1])
     elif dataset_name == 'imagenet':
@@ -292,6 +294,7 @@ def dataset_and_transform_generate(args):
                                                           split='val',
                                                           download=True,
                                                           )
+            
         elif args.dataset == "imagenet":
             from torchvision.datasets import ImageFolder
 
