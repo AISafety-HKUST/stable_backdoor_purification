@@ -13,15 +13,15 @@ import torch.nn as nn
 from torch import optim
 from torch.utils.data import DataLoader
 
-from utils.aggregate_block.save_path_generate import generate_save_folder
-from utils.aggregate_block.dataset_and_transform_generate import get_num_classes, get_input_shape
+from utils.aggregate_block.dataset_and_transform_generate import get_num_classes, get_input_shape, dataset_and_transform_generate
 from utils.aggregate_block.fix_random import fix_random
-from utils.aggregate_block.dataset_and_transform_generate_ft import dataset_and_transform_generate
 from utils.bd_dataset import prepro_cls_DatasetBD
 
 from utils.aggregate_block.model_trainer_generate import generate_cls_model
-from load_data import CustomDataset, CustomDataset_v2
-
+from load_data import CustomDataset_v2
+from utils.save_load_attack import load_attack_result
+from utils.choose_index import choose_index_v2
+from utils.bd_dataset_v2 import prepro_cls_DatasetBD_v2
 from test import test
 
 
@@ -47,10 +47,10 @@ def add_args(parser):
     return a parser added with args required by fit
     """
     # Training settings
-    parser.add_argument('--device', type = str)
+    parser.add_argument('--device', default=0, type=int)
     parser.add_argument('--ft_mode', type = str, default='all')
     
-    parser.add_argument('--attack', type = str, )
+    parser.add_argument('--attack', type = str)
     parser.add_argument('--attack_label_trans', type=str, default='all2one',
                         help='which type of label modification in backdoor attack'
                         )
@@ -102,32 +102,27 @@ def main():
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
     if args.ft_mode == 'fe-tuning':
         init = True
-        log_name = 'FE-tuning'
     elif args.ft_mode == 'ft-init':
         init = True
-        log_name = 'FT-init'
     elif args.ft_mode == 'ft':
         init = False
-        log_name = 'FT'
     elif args.ft_mode == 'lp':
         init = False
-        log_name = 'LP'
     elif args.ft_mode == 'fst':
         assert args.alpha is not None
         init = True
-        log_name = 'FST'
     else:
         raise NotImplementedError('Not implemented method.')
 
     if not args.pre:
         
-        args.folder_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}'
-        os.makedirs(f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}', exist_ok=True)
-        args.save_path = f'../logs_{args.model}_{args.dataset}/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        folder_path = folder_path = f'../record/{args.dataset}/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}'
+        os.makedirs(f'../logs/{args.dataset}/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}', exist_ok=True)
+        save_path = f'../logs/{args.dataset}/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}'
     else:
-        args.folder_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}'
-        os.makedirs(f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}', exist_ok=True)
-        args.save_path = f'../logs_{args.model}_{args.dataset}_pre/{log_name}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        folder_path = f'../record/{args.dataset}_pre/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}'
+        os.makedirs(f'../logs/{args.dataset}_pre/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}', exist_ok=True)
+        save_path = f'../logs/{args.dataset}_pre/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}'
         
         
     logFormatter = logging.Formatter(
@@ -137,7 +132,7 @@ def main():
     logger = logging.getLogger()
 
     if args.log:
-        fileHandler = logging.FileHandler(args.save_path + '.log')
+        fileHandler = logging.FileHandler(save_path + 'log.txt')
         fileHandler.setFormatter(logFormatter)
         logger.addHandler(fileHandler)
 
@@ -151,31 +146,24 @@ def main():
 
 
     ### 2. set the clean train data and clean test data
-    if not args.pre:
-        _, train_img_transform, \
-                    train_label_transfrom, \
-        test_dataset_without_transform, \
-                    test_img_transform, \
-                    test_label_transform, \
-                    ft_dataset_without_transform = dataset_and_transform_generate(args)
-    else:
-        from utils.aggregate_block.dataset_and_transform_generate_ft import dataset_and_transform_generate_pre
-        _, train_img_transform, \
-                    train_label_transfrom, \
-        test_dataset_without_transform, \
-                    test_img_transform, \
-                    test_label_transform, \
-                    ft_dataset_without_transform = dataset_and_transform_generate_pre(args)
+   
+    _, train_img_transform, \
+                train_label_transfrom, \
+    test_dataset_without_transform, \
+                test_img_transform, \
+                test_label_transform = dataset_and_transform_generate(args)
     
-    benign_train_ds = prepro_cls_DatasetBD(
-            full_dataset_without_transform=ft_dataset_without_transform,
-            poison_idx=np.zeros(len(ft_dataset_without_transform)),  # one-hot to determine which image may take bd_transform
-            bd_image_pre_transform=None,
-            bd_label_pre_transform=None,
-            ori_image_transform_in_loading=train_img_transform,
-            ori_label_transform_in_loading=train_label_transfrom,
-            add_details_in_preprocess=True,
-        )
+    result = load_attack_result(folder_path + '/attack_result.pt')
+    clean_dataset = prepro_cls_DatasetBD_v2(result['clean_train'].wrapped_dataset)
+    data_all_length = len(clean_dataset)
+    ran_idx = choose_index_v2(args.split_ratio, data_all_length) 
+    
+    clean_dataset.subset(ran_idx)
+    data_set_clean = result['clean_train']
+    data_set_clean.wrapped_dataset = clean_dataset
+    data_set_clean.wrap_img_transform = train_img_transform
+    benign_train_ds = data_set_clean
+
     
 
     benign_test_ds = prepro_cls_DatasetBD(
@@ -189,15 +177,13 @@ def main():
         )
 
 
-    model_dict = torch.load(args.folder_path + '/attack_result.pt')
+    model_dict = torch.load(folder_path + '/attack_result.pt')
     adv_test_dataset = model_dict['bd_test']
     
-    if 'x' in adv_test_dataset.keys():
-        adv_test_dataset = CustomDataset(adv_test_dataset['x'], adv_test_dataset['y'], test_img_transform) # For BackdoorBench v1
-    else:
-        import glob
-        image_list = glob.glob(args.folder_path + '/bd_test_dataset/*/*.png')
-        adv_test_dataset = CustomDataset_v2(image_list, args.attack_target, test_img_transform)
+   
+    import glob
+    image_list = glob.glob(folder_path + '/bd_test_dataset/*/*.png')
+    adv_test_dataset = CustomDataset_v2(image_list, args.attack_target, test_img_transform)
 
     ### 3. generate dataset for backdoor defense and evaluation
 
@@ -268,7 +254,7 @@ def main():
         if 'adv_test_data' == dl_name:
             cur_adv_acc = metric_info['adv_test_data acc']
     logging.info('*****************************')
-    logging.info(f"Load from {args.folder_path + '/attack_result.pt'}")
+    logging.info(f"Load from {folder_path + '/attack_result.pt'}")
     logging.info(f'Fine-tunning mode: {args.ft_mode}')
     logging.info('Original performance')
     logging.info(f"Test Set: Clean ACC: {cur_clean_acc} | ASR: {cur_adv_acc}")
@@ -324,7 +310,7 @@ def main():
 
         for batch_idx, (x, labels, *additional_info) in enumerate(train_data):
 
-            
+
             x, labels = x.to(device), labels.to(device)
             log_probs= net(x)
             if args.lb_smooth is not None:
@@ -374,9 +360,9 @@ def main():
             logging.info('-------------------------------------')
     
     if args.save:
-        model_save_path = f'defense_results/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}-lr_{args.lr}-mode_{args.ft_mode}-epochs_{args.epochs}'
+        model_save_path = folder_path + f'/defense/{args.ft_mode}'
         os.makedirs(model_save_path, exist_ok=True)
-        torch.save(net.state_dict(), f'{model_save_path}/checkpoint.pt')
+        torch.save(net.state_dict(), f'{model_save_path}/defense_result.pt')
         
     
 if __name__ == '__main__':
