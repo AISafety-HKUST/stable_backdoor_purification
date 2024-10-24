@@ -17,9 +17,8 @@ import time
 import logging
 import torch.nn as nn
 
-from utils.aggregate_block.dataset_and_transform_generate import get_num_classes, get_input_shape
+from utils.aggregate_block.dataset_and_transform_generate import get_num_classes, get_input_shape, dataset_and_transform_generate
 from utils.aggregate_block.fix_random import fix_random
-from utils.aggregate_block.dataset_and_transform_generate_ft import dataset_and_transform_generate, dataset_and_transform_generate_pre
 from utils.bd_dataset_v2 import dataset_wrapper_with_transform, get_labels
 from utils.aggregate_block.model_trainer_generate import generate_cls_model
 from utils.aggregate_block.train_settings_generate import argparser_opt_scheduler, argparser_criterion
@@ -143,21 +142,14 @@ class NormalCase:
         assert 'args' in self.__dict__
 
         args = self.args
-        if not args.pre:
-            train_dataset_without_transform, \
-            train_img_transform, \
-            train_label_transform, \
-            test_dataset_without_transform, \
-            test_img_transform, \
-            test_label_transform,_ = dataset_and_transform_generate(args)
+        train_dataset_without_transform, \
+        train_img_transform, \
+        train_label_transform, \
+        test_dataset_without_transform, \
+        test_img_transform, \
+        test_label_transform,_ = dataset_and_transform_generate(args)
             
-        else:
-            train_dataset_without_transform, \
-            train_img_transform, \
-            train_label_transform, \
-            test_dataset_without_transform, \
-            test_img_transform, \
-            test_label_transform,_ = dataset_and_transform_generate_pre(args)
+        
 
         logging.debug("dataset_and_transform_generate done")
 
