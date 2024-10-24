@@ -147,7 +147,7 @@ class NormalCase:
         train_label_transform, \
         test_dataset_without_transform, \
         test_img_transform, \
-        test_label_transform,_ = dataset_and_transform_generate(args)
+        test_label_transform = dataset_and_transform_generate(args)
             
         
 
