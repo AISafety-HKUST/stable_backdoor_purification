@@ -67,8 +67,6 @@ class NormalCase:
                             help='git hash number, in order to find which version of code is used')
         parser.add_argument("--yaml_path", type=str, default="../config/attack/prototype/cifar10.yaml")
         parser.add_argument('--pre', action='store_true', help='whether load pre-trained weights')
-        parser.add_argument('--split_ratio', type=float,
-                        help='part of the training set for defense')
         
         return parser
 
@@ -92,9 +90,9 @@ class NormalCase:
 
     def prepare(self, args):
         if not args.pre:
-            save_path = f'../record_{args.dataset}/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}'
+            save_path = f'../record/{args.dataset}/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}'
         else:
-            save_path = f'../record_{args.dataset}_pre/{args.attack}/' + f'pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}-dataset_{args.dataset}-sratio_{args.split_ratio}'
+            save_path = f'../record/{args.dataset}_pre/{args.attack}/pratio_{args.pratio}-target_{args.attack_target}-archi_{args.model}'
         
         os.makedirs(save_path,exist_ok=True)
         args.save_path = save_path
