@@ -27,7 +27,7 @@ We also implemented the adaptive attack [Bypass](https://arxiv.org/abs/1905.1340
 ```cmd
 python ./attack/badnet_bypass.py --yaml_path ../config/attack/prototype/cifar10.yaml
 ```
-You could try the [Blend trigger](resource/blended/hello_kitty.jpeg) by simply replacing the [badnet_bypass.py](attack/badnet_bypass.py) with [blend_bypass.py](attack/blend_bypass.py).
+You could try the [Blend trigger](resource/blended/hello_kitty.jpeg) by simply replacing the [badnet_bypass.py](attack/badnet_bypass.py) with [blend_bypass.py](attack/blend_bypass.py). Note that we only implement Bypass attack on ResNet-X architecture.
 
 #### Launch Feature Shift Tuning (FST)
 Here we demonstrate how to conduct these fine-tuning methods to purify backdoor models. For example, if you want to evaluate the feature shift tuning (FST) on backdoor models, you could use the following script:
