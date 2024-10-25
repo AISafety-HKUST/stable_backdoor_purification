@@ -65,7 +65,7 @@ python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml --
 ```
 
 #### Launch Path-Aware Minimization (PAM)
-Our core algorithm design is depicted in this [file](fine_tune/sam.py).
+Our core algorithm design is depicted in this [file](fine_tune/sam.py). I'll provide complete code by this week.
 
 ----
 #### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"*. It may be the best repo for backdoor research. Please consider leaving a :star: on their repository. Feel free to raise issues if you find bugs/reproducing problems in our code, or you can email me at rminaa@connect.ust.hk.
