@@ -15,6 +15,8 @@ sh ./sh/install.sh
 sh ./sh/init_folders.sh
 ```
 
+----
+
 ### Pipeline
 #### Train Backdoor Models
 Before conducting backdoor defense, you have to train a backdoor model with the poisoned training set. Here is an example of training a [BadNet](https://arxiv.org/abs/1708.06733) model on CIFAR-10.
@@ -87,6 +89,7 @@ If you find our work interesting, please consider giving a star :star: and cite 
   year={2024}
 }
 ```
+----
 
 ### Acknowledgement
 
