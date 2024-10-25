@@ -48,7 +48,7 @@ python fine_tune/ft_poison.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
 --device cuda:0 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10 \
 --epochs 5 --defense_type fst --poison_num 5 --save
 ```
-This is very similar to vanilla fine-tuning; the core difference is that the fine-tuning dataset contains backdoor examples. You could set ```--defense_type``` to specify the defense method, and set ```--poison_num``` to specify the number of backdoor examples in the fine-tuning dataset.
+This is very similar to vanilla fine-tuning; the core difference is that the fine-tuning dataset contains backdoor examples. You could set ```--defense_type``` to specify the defense method and set ```--poison_num``` to specify the number of backdoor examples in the fine-tuning dataset.
 
 #### Launch Query-based Reactivation Attack (QRA)
 Here we demonstrate how to conduct the Query-based Reactivation Attack (QRA) on purified models. For example, if you want to generate the reactivating perturbation for models purified by FST, you could use the following script:
@@ -65,7 +65,7 @@ python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml --
 ```
 
 #### Launch Path-Aware Minimization (PAM)
-See ```fine_tune/pam.py``` for core algorithm design.
+Our core algorithm design is depicted in this [file](fine_tune/sam.py).
 
 ----
 #### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"*. It may be the best repo for backdoor research. Please consider leaving a :star: on their repository.
