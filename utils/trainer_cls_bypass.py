@@ -282,7 +282,7 @@ class ModelTrainerCLS():
             for batch_idx, (x, target, *additional_info) in enumerate(test_data):
                 x = x.to(device, non_blocking = True)
                 target = target.to(device, non_blocking = True)
-                pred,inter = model(x)
+                pred = model(x)
                 loss = criterion(pred, target.long())
 
                 _, predicted = torch.max(pred, -1)
@@ -303,7 +303,7 @@ class ModelTrainerCLS():
         x, labels = x.to(device, non_blocking = True), labels.to(device, non_blocking = True)
 
         with torch.cuda.amp.autocast(enabled=self.amp):
-            log_probs,inter = self.model(x)
+            log_probs = self.model(x)
             loss = self.criterion(log_probs, labels.long())
         self.scaler.scale(loss).backward()
         self.scaler.step(self.optimizer)
@@ -627,7 +627,7 @@ def given_dataloader_test(
             x = x.to(device, non_blocking=non_blocking)
             # print(x.shape)
             target = target.to(device, non_blocking=non_blocking)
-            pred,inter = model(x)
+            pred = model(x)
             loss = criterion(pred, target.long())
 
             _, predicted = torch.max(pred, -1)
@@ -674,7 +674,7 @@ def test_given_dataloader_on_mix(model, test_dataloader,  criterion, device = No
         for batch_idx, (x, labels, original_index, poison_indicator, original_targets) in enumerate(test_dataloader):
             x = x.to(device, non_blocking=non_blocking)
             labels = labels.to(device, non_blocking=non_blocking)
-            pred,inter = model(x)
+            pred = model(x)
             loss = criterion(pred, labels.long())
 
             _, predicted = torch.max(pred, -1)
@@ -1838,7 +1838,7 @@ class BackdoorModelTrainer(ModelTrainerCLS_v2):
             for batch_idx, (x, labels, original_index, poison_indicator, original_targets) in enumerate(test_dataloader):
                 x = x.to(device, non_blocking=self.non_blocking)
                 labels = labels.to(device, non_blocking=self.non_blocking)
-                pred,inter = model(x)
+                pred = model(x)
                 loss = criterion(pred, labels.long())
 
                 _, predicted = torch.max(pred, -1)
