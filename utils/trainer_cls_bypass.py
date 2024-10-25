@@ -1143,7 +1143,7 @@ class ModelTrainerCLS_v2():
         x, labels = x.to(device, non_blocking=self.non_blocking), labels.to(device, non_blocking=self.non_blocking)
         
         with torch.cuda.amp.autocast(enabled=self.amp):
-            log_probs, inter = self.model(x)
+            log_probs, inter = self.model(x, inter_output=True)
             
             loss_inter = nn.BCELoss()(self.discriminator(inter).reshape(-1),target = poison_indicator.float().to(x.device))
             loss = self.criterion(log_probs, labels.long()) - self.regularization_ratio * loss_inter
