@@ -48,7 +48,7 @@ def bd_attack_img_trans_generate(args):
     :return: transform on img for backdoor attack in both train and test phase
     '''
 
-    if args.attack in ['badnet',]:
+    if args.attack in ['badnet', 'badnet_bypass']:
 
 
         trans = transforms.Compose([
@@ -74,7 +74,7 @@ def bd_attack_img_trans_generate(args):
             (npClipAndToUint8,False),
         ])
 
-    elif args.attack == 'blended':
+    elif args.attack in ['blended', 'blended_bypass']:
 
         trans = transforms.Compose([
             transforms.ToPILImage(),
