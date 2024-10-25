@@ -16,7 +16,7 @@ sh ./sh/init_folders.sh
 ```
 
 ### Pipeline
-#### Train Backdoor Models
+#### <font color=Blue>Test</font>Train Backdoor Models
 Before conducting backdoor defense, you have to train a backdoor model with the poisoned training set. Here is an example of training a [BadNet](https://arxiv.org/abs/1708.06733) model on CIFAR-10.
 ```cmd
 python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml
