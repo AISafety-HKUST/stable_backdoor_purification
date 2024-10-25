@@ -16,7 +16,7 @@ sh ./sh/init_folders.sh
 ```
 
 ### Pipeline
-#### <font color=Blue>Test</font>Train Backdoor Models
+#### Train Backdoor Models
 Before conducting backdoor defense, you have to train a backdoor model with the poisoned training set. Here is an example of training a [BadNet](https://arxiv.org/abs/1708.06733) model on CIFAR-10.
 ```cmd
 python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml
@@ -41,7 +41,7 @@ python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
 You could further specify the tuning method by simply changing the ``` --ft_mode``` field. Currently, we support **ft** for vanilla fine-tuning; **lp** for linear-probing; **fe-tuning** for FE-tuning; **ft-init** for FT-init; **fst** for FST. 
 
 #### Launch Retuning Attacks (RA) on Purified Models
-Here we demonstrate how to conduct retuning attacks on purified models. For example, if you want to evaluate the post-robustness of FST on backdoor models, you could use the following script:
+Here we demonstrate how to conduct retuning attacks (RA) on purified models. For example, if you want to evaluate the post-robustness of FST on backdoor models, you could use the following script:
 
 ```cmd
 python fine_tune/ft_poison.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
@@ -51,6 +51,20 @@ python fine_tune/ft_poison.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
 This is very similar to vanilla fine-tuning; the core difference is that the fine-tuning dataset contains backdoor examples. You could set ```--defense_type``` to specify the defense method, and set ```--poison_num``` to specify the number of backdoor examples in the fine-tuning dataset.
 
 #### Launch Query-based Reactivation Attack (QRA)
+Here we demonstrate how to conduct the Query-based Reactivation Attack (QRA) on purified models. For example, if you want to generate the reactivating perturbation for models purified by FST, you could use the following script:
+```cmd
+python fine_tune/qra.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
+--device cuda:0 --lr 0.01 --attack_target 0 --model resnet18 --dataset cifar10 \
+--epochs 50 --defense_type fst --alpha_qra 0.2 --clean_num_qra 500 --poison_num_qra 500
+```
+The ```--alpha_qra``` is the parameter that controls the trade-off between reactivating and adversarial perturbation. A larger ```--alpha_qra``` indicates improved reactivating performance, but meanwhile leads to more adversarial components, which will make the reactivating perturbation attack both the backdoor and benign models simultaneously. The ```--clean_num_qra``` and ```--poison_num_qra``` indicate the number of clean and poisoned examples for optimizing the reactivating perturbation respectively.
+
+Note that directly running this script may lead to errors, most likely it will remind you the path for the clean model is not found. This is because you need to train and save a clean model before running this script. To train a clean model,
+try the following command:
+```cmd
+python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml --pratio 0
+```
+
 #### Launch Path-Aware Minimization (PAM)
 
 ----
