@@ -42,7 +42,7 @@ python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
 
 You could further specify the tuning method by simply changing the ``` --ft_mode``` field. Currently, we support **ft** for vanilla fine-tuning; **lp** for linear-probing; **fe-tuning** for FE-tuning; **ft-init** for FT-init; **fst** for FST. 
 
-#### Launch Retuning Attacks (RA) on Purified Models
+#### Launch Retuning Attacks (RA)
 Here we demonstrate how to conduct retuning attacks (RA) on purified models. For example, if you want to evaluate the post-robustness of FST on backdoor models, you could use the following script:
 
 ```cmd
