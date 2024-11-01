@@ -94,5 +94,5 @@ If you find our work interesting, please consider giving a star :star: and cite 
 
 ### Acknowledgement
 
-#### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"* and please also consider leaving a :star: on their repository. Feel free to raise issues if you find bugs/reproducing problems in our code, or you can email me at rminaa@connect.ust.hk.
+#### Our codes heavily depend on [BackdoorBench](https://github.com/SCLBD/BackdoorBench), *"BackdoorBench: A Comprehensive Benchmark of Backdoor Learning"* and please also consider leaving a :star: on their repository. Feel free to raise issues if you find bugs/reproducing problems in our code, or you can email rminaa@connect.ust.hk/zeyu.qin@connect.ust.hk.
 
