@@ -439,7 +439,7 @@ def main():
         x_tmp = x_unnorm[0].clone()
         x = normalize(x_unnorm)
        
-        save_image_from_tensor(x_tmp, 'clean.png')
+        save_image_from_tensor(x_tmp, 'examples/clean.png')
        
        
         labels = labels.to(device)
