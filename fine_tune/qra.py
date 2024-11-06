@@ -258,7 +258,7 @@ def main():
 
     relearn_path = folder_path + f'/defense/{args.defense_type}/relearn_result.pt'
     defense_path = folder_path + f'/defense/{args.defense_type}/defense_result.pt'
-    clean_path = f'../record/{args.dataset}/badnet/pratio_0.0-target_0-archi_{args.model}-dataset_{args.dataset}/attack_result.pt'
+    clean_path = f'../record/{args.dataset}/badnet/pratio_0.0-target_0-archi_{args.model}/attack_result.pt'
     model_dict = torch.load(relearn_path, map_location='cpu')
     net_relearn.load_state_dict(model_dict)
       
