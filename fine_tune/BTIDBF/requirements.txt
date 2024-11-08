@@ -1,0 +1,7 @@
+numpy==1.24.2
+pandas==2.0.0
+torch==2.0.1
+torchattacks==3.4.0
+torchaudio==2.0.1
+torchvision==0.15.2
+tqdm==4.65.0
