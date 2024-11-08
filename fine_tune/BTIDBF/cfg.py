@@ -44,7 +44,7 @@ def get_arguments():
     parser.add_argument("--pur_round", type=int, default=30, help="iteration of dpi-dbf (p)")
     parser.add_argument("--pur_norm_bound", type=float, default=0.05)
     parser.add_argument("--earlystop", type=bool, default=False)
-    parser.add_argument("--use_sam", action='store_true', default=False)
+    parser.add_argument("--use_pam", action='store_true', default=False)
     parser.add_argument("--rho", type=float)
     parser.add_argument("--attack_name", type=str, default='badnet')
     parser.add_argument("--pratio", type=float, default=0.05)
