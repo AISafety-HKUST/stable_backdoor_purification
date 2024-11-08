@@ -269,7 +269,7 @@ if __name__ == "__main__":
     _, _, classifier = box.get_state_dict(folder_path + '/attack_result.pt')
     
     classifier_copy = deepcopy(classifier)
-    if not opt.use_sam:
+    if not opt.use_pam:
         opt_cls = torch.optim.Adam(classifier.parameters(), lr = 1e-4)
     else:
         
@@ -300,7 +300,7 @@ if __name__ == "__main__":
             checked_tlabel = get_target_label(testloader=cln_trainloader, testmodel=classifier, box=box, midmodel=bd_gen)
             if checked_tlabel != detected_tlabel:
                 break
-        if opt.use_sam:
+        if opt.use_pam:
             unlearn_pam(classifier, bd_gen, classifier_copy, folder_path)
         else:
             unlearn(classifier, bd_gen, folder_path)
