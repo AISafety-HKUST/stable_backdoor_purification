@@ -40,7 +40,7 @@ python fine_tune/ft.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
 --epochs 10 --ft_mode fst --alpha 0.1 --save
 ```
 
-You could further specify the tuning method by simply changing the ``` --ft_mode``` field. Currently, we support **ft** for vanilla fine-tuning; **lp** for linear-probing; **fe-tuning** for FE-tuning; **ft-init** for FT-init; **fst** for FST. 
+You could further specify the tuning method by simply changing the ``` --ft_mode``` field. Currently, we support **ft** for vanilla fine-tuning; **lp** for linear-probing; **fe-tuning** for FE-tuning; **ft-init** for FT-init; **fst** for FST. For datasets with larger scales (e.g., CIFAR-100 and TinyImageNet), our FST may induce a significant drop in clean accuracy caused by the initialization of the linear layer. Therefore, it is recommended to use a small ```--alpha``` or simply set it to zero to maintain clean accuracy. Additionally, you could increase the number of benign examples (e.g. 5% of the training dataset) to compensate for the accuracy drop.
 
 #### Launch Retuning Attacks (RA)
 Here we demonstrate how to conduct retuning attacks (RA) on purified models. For example, if you want to evaluate the post-robustness of FST on backdoor models, you could use the following script:
@@ -72,7 +72,7 @@ Here we demonstrate how to conduct PAM to purify models. First, go to the [BTIDB
 ```cmd
 sh defensh.sh
 ```
-You can interchange BTI and PAM by setting ```--use_pam```. Our core algorithm design is depicted in this [file](fine_tune/BTIDBF/sam.py) and we provide checkpoints (four backdoor attack demos trained on CIFAR-10 and ResNet-18) robustly purified by PAM in this [link](https://drive.google.com/file/d/1qqi-ZxPFngTOwOjx8V-LTA4OP14UEt8e/view?usp=sharing). 
+You can interchange BTI and PAM by setting ```--use_pam```. Our core algorithm design is depicted in this [file](fine_tune/BTIDBF/sam.py) and we provide checkpoints (four backdoor attack demos trained on CIFAR-10 and ResNet-18) robustly purified by PAM in this [link](https://drive.google.com/file/d/1qqi-ZxPFngTOwOjx8V-LTA4OP14UEt8e/view?usp=sharing). To maintain high clean accuracy and stable purification results, you may adjust the hyperparameter of BTI for better performance. Here, we list some empirical tips to improve performance. For example, if you find that PAM cannot defend against retuning attacks, try increasing the ratio of reversed examples during unlearning. Alternatively, you could increase the ```--rho``` to promote more deviation, although this may result in a drop in clean accuracy. Besides, you could slightly decrease the number of unlearning epochs specified by ```--ul_round``` (e.g., 15 and 20) and total unlearning rounds specified by ```--nround``` (e.g., for attacks like Blended and SSBA, unlearning with 1 or 2 rounds is enough) to maintain the clean performance.
 
 ----
 
