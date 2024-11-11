@@ -61,7 +61,7 @@ python fine_tune/qra.py --attack badnet --split_ratio 0.02 --pratio 0.1 \
 ```
 The ```--alpha_qra``` is the parameter that controls the trade-off between reactivating and adversarial perturbation. A larger ```--alpha_qra``` indicates improved reactivating performance, but meanwhile leads to more adversarial components, which will make the reactivating perturbation attack both the backdoor and benign models simultaneously. The ```--clean_num_qra``` and ```--poison_num_qra``` indicate the number of clean and poisoned examples for optimizing the reactivating perturbation respectively.
 
-Note that directly running this script may lead to errors; most likely, it will prompt you that the path for the clean model is not found. This is because you need to train and save a clean model before running this script. To train a clean model, you can set the poisoning ratio to 0 with the following command:
+Note that directly running this script may lead to errors; most likely, it will prompt you that the path for the clean/EP model is not found. This is because you need to train and save a clean/EP model before running this script. For example, to train a clean model, you can set the poisoning ratio to 0 with the following command:
 ```cmd
 python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml --pratio 0
 ```
