@@ -70,6 +70,7 @@ python ./attack/badnet.py --yaml_path ../config/attack/prototype/cifar10.yaml --
 
 Here we demonstrate how to conduct PAM to purify models. First, go to the [BTIDBF folder](fine_tune/BTIDBF) and execute PAM with the following command:
 ```cmd
+cd fine_tune/BTIDBF
 sh defensh.sh
 ```
 You can interchange BTI and PAM by setting ```--use_pam```. Our core algorithm design is depicted in this [file](fine_tune/BTIDBF/sam.py) and we provide checkpoints (four backdoor attack demos trained on CIFAR-10 and ResNet-18) robustly purified by PAM in this [link](https://drive.google.com/file/d/1qqi-ZxPFngTOwOjx8V-LTA4OP14UEt8e/view?usp=sharing). To maintain high clean accuracy and stable purification results, you may adjust the hyperparameter of BTI for better performance. Here, we list some empirical tips to improve performance. For example, if you find that PAM cannot defend against retuning attacks, try increasing the ratio of reversed examples during unlearning. Alternatively, you could increase the ```--rho``` to promote more deviation, although this may result in a drop in clean accuracy. Besides, you could slightly decrease the number of unlearning epochs specified by ```--ul_round``` (e.g., 15 and 20) and total unlearning rounds specified by ```--nround``` (e.g., for attacks like Blended and SSBA, unlearning with 1 or 2 rounds is enough) to maintain the clean performance.
