@@ -1,4 +1,4 @@
-## Stable Backdoor Purification (NeurIPS 2023 & 2024)
+## Backdoor Safety Tuning (NeurIPS 2023 & 2024 Spotlight)
 This repository contains the official implementation of [Towards Stable Backdoor Purification through Feature Shift Tuning](https://arxiv.org/abs/2310.01875) and [Uncovering, Explaining, and Mitigating the Superficial Safety of Backdoor Defense](https://arxiv.org/abs/2410.09838).
 
 ----
