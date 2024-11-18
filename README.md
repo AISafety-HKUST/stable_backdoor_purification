@@ -7,10 +7,10 @@ This repository contains the official implementation of [Towards Stable Backdoor
 
 Clone this repository and install all the required dependencies with the following commands.
 ```cmd
-git clone https://github.com/AISafety-HKUST/stable_backdoor_purification.git
-cd stable_backdoor_purification
-conda create -n stable_backdoor_purification python=3.8
-conda activate stable_backdoor_purification
+git clone https://github.com/AISafety-HKUST/Backdoor_Safety_Tuning.git
+cd Backdoor_Safety_Tuning
+conda create -n Backdoor_Safety_Tuning python=3.8
+conda activate Backdoor_Safety_Tuning
 sh ./sh/install.sh
 sh ./sh/init_folders.sh
 ```
